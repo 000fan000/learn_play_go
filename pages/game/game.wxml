@@ -1,0 +1,88 @@
+<view class="container">
+  <!-- 游戏信息区域 -->
+  <view class="game-info">
+    <view class="player-info">
+      <view class="player-name">玩家</view>
+      <view class="player-stats">
+        <text>用时: {{playerInfo.timeUsed}}秒</text>
+        <text>提子: {{playerInfo.captures}}</text>
+      </view>
+    </view>
+    <view class="vs">VS</view>
+    <view class="ai-info">
+      <view class="ai-name">AI ({{aiLevel}})</view>
+      <view class="ai-stats">
+        <text>用时: {{aiInfo.timeUsed}}秒</text>
+        <text>提子: {{aiInfo.captures}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错误信息显示 -->
+  <view class="error-message" wx:if="{{errorMessage}}">
+    <text>{{errorMessage}}</text>
+  </view>
+
+  <!-- 棋盘区域 -->
+  <view class="board-container {{isLoading ? 'loading' : ''}}">
+    <view class="board">
+      <view class="board-grid">
+        <block wx:for="{{boardSize}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex">
+          <view class="board-row">
+            <block wx:for="{{boardSize}}" wx:for-item="col" wx:for-index="colIndex" wx:key="colIndex">
+              <view class="board-cell" bindtap="placeStone" data-row="{{rowIndex}}" data-col="{{colIndex}}">
+                <view class="grid-line horizontal"></view>
+                <view class="grid-line vertical"></view>
+                <view class="stone black" wx:if="{{board[rowIndex][colIndex] === 1}}"></view>
+                <view class="stone white" wx:if="{{board[rowIndex][colIndex] === -1}}"></view>
+              </view>
+            </block>
+          </view>
+        </block>
+      </view>
+    </view>
+    <!-- 加载遮罩 -->
+    <view class="loading-mask" wx:if="{{isLoading}}">
+      <view class="loading-spinner"></view>
+      <text>AI思考中...</text>
+    </view>
+  </view>
+
+  <!-- AI分析区域 -->
+  <view class="ai-analysis" wx:if="{{aiAnalysis}}">
+    <view class="analysis-header">
+      <text class="analysis-title">AI分析</text>
+      <text class="win-probability">胜率: {{winProbability * 100}}%</text>
+    </view>
+    <view class="analysis-content">{{aiAnalysis}}</view>
+    <view class="variations" wx:if="{{aiVariations.length > 0}}">
+      <text class="variations-title">备选方案:</text>
+      <view class="variation-item" wx:for="{{aiVariations}}" wx:key="move">
+        <text class="move">{{item.move}}</text>
+        <text class="score">评分: {{item.score * 100}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 控制按钮区域 -->
+  <view class="controls">
+    <view class="difficulty-selector">
+      <text>AI难度：</text>
+      <view class="difficulty-buttons">
+        <button 
+          wx:for="{{difficultyLevels}}" 
+          wx:key="id"
+          class="difficulty-btn {{aiLevel === item.id ? 'active' : ''}}"
+          bindtap="selectDifficulty"
+          data-level="{{item.id}}"
+          disabled="{{isLoading}}"
+        >{{item.name}}</button>
+      </view>
+    </view>
+    <view class="action-buttons">
+      <button class="action-btn" bindtap="undoMove" disabled="{{isLoading}}">悔棋</button>
+      <button class="action-btn" bindtap="resign" disabled="{{isLoading}}">认输</button>
+      <button class="action-btn" bindtap="restartGame" disabled="{{isLoading}}">重新开始</button>
+    </view>
+  </view>
+</view> 

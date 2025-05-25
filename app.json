@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/game/game",
+    "pages/index/index",
+    "pages/logs/logs"
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "围棋对弈",
+    "navigationBarBackgroundColor": "#007AFF"
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
