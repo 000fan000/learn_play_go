@@ -26,7 +26,7 @@ const systemPrompt = `# 角色：你是一位围棋AI助手，请根据当前盘
   },
   "ai_config": {
     "level": "pro",              # 难度等级
-    "time_limit": 30             # 思考时间(秒)
+    "time_limit": 10             # 思考时间(秒)
   }
 }
 

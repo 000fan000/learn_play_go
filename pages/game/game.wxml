@@ -1,16 +1,22 @@
 <view class="container">
   <!-- 游戏信息区域 -->
   <view class="game-info">
-    <view class="player-info">
-      <view class="player-name">玩家</view>
+    <view class="player-info {{currentPlayer === 'black' ? 'active' : ''}}">
+      <view class="player-name">
+        <view class="color-indicator black"></view>
+        玩家
+      </view>
       <view class="player-stats">
         <text>用时: {{playerInfo.timeUsed}}秒</text>
         <text>提子: {{playerInfo.captures}}</text>
       </view>
     </view>
     <view class="vs">VS</view>
-    <view class="ai-info">
-      <view class="ai-name">AI ({{aiLevel}})</view>
+    <view class="ai-info {{currentPlayer === 'white' ? 'active' : ''}}">
+      <view class="ai-name">
+        <view class="color-indicator white"></view>
+        AI ({{aiLevel}})
+      </view>
       <view class="ai-stats">
         <text>用时: {{aiInfo.timeUsed}}秒</text>
         <text>提子: {{aiInfo.captures}}</text>
@@ -25,6 +31,12 @@
 
   <!-- 棋盘区域 -->
   <view class="board-container {{isLoading ? 'loading' : ''}}">
+    <!-- 左侧数字坐标 -->
+    <view class="coordinate-numbers">
+      <text wx:for="{{boardSize}}" wx:key="*this" class="coordinate-text">{{boardSize - index}}</text>
+    </view>
+    
+    <!-- 棋盘主体 -->
     <view class="board">
       <view class="board-grid">
         <block wx:for="{{boardSize}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex">
@@ -41,11 +53,17 @@
         </block>
       </view>
     </view>
-    <!-- 加载遮罩 -->
-    <view class="loading-mask" wx:if="{{isLoading}}">
-      <view class="loading-spinner"></view>
-      <text>AI思考中...</text>
+
+    <!-- 底部字母坐标 -->
+    <view class="coordinate-letters">
+      <text wx:for="{{boardSize}}" wx:key="*this" class="coordinate-text">{{String.fromCharCode(65 + index)}}</text>
     </view>
+  </view>
+
+  <!-- 最后一步坐标显示 -->
+  <view class="last-move" wx:if="{{moveHistory.length > 0}}">
+    <text class="last-move-label">最后一步：</text>
+    <text class="last-move-coord">{{moveHistory[moveHistory.length - 1]}}</text>
   </view>
 
   <!-- AI分析区域 -->

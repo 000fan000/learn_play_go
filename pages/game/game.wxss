@@ -23,12 +23,42 @@
 .player-info, .ai-info {
   flex: 1;
   text-align: center;
+  padding: 16rpx;
+  border-radius: 12rpx;
+  transition: all 0.3s ease;
+}
+
+.player-info.active, .ai-info.active {
+  background-color: rgba(0, 122, 255, 0.1);
+  box-shadow: 0 0 0 2rpx #007AFF;
 }
 
 .player-name, .ai-name {
   font-size: 32rpx;
   font-weight: bold;
   margin-bottom: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+
+.color-indicator {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.color-indicator.black {
+  background-color: #000;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+}
+
+.color-indicator.white {
+  background-color: #fff;
+  border: 2rpx solid #000;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
 }
 
 .player-stats, .ai-stats {
@@ -68,6 +98,8 @@
   border-radius: 16rpx;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .board-container.loading {
@@ -104,9 +136,41 @@
   100% { transform: rotate(360deg); }
 }
 
+.coordinate-numbers {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 40rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  z-index: 2;
+}
+
+.coordinate-letters {
+  position: absolute;
+  left: 40rpx;
+  right: 0;
+  bottom: 0;
+  height: 40rpx;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20rpx;
+  z-index: 2;
+}
+
+.coordinate-text {
+  font-size: 24rpx;
+  color: #666;
+  font-weight: bold;
+}
+
 .board {
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 40rpx);
+  height: calc(100% - 40rpx);
+  margin: 20rpx 0 0 40rpx;
   position: relative;
   background-color: #DEB887;
   border-radius: 8rpx;
@@ -299,4 +363,30 @@
 .action-btn[disabled] {
   opacity: 0.5;
   background-color: #ccc;
+}
+
+/* 最后一步坐标显示 */
+.last-move {
+  width: 100%;
+  padding: 16rpx;
+  margin: 20rpx 0;
+  background-color: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+
+.last-move-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.last-move-coord {
+  font-size: 32rpx;
+  color: #007AFF;
+  font-weight: bold;
+  font-family: monospace;
 } 
