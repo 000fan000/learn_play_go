@@ -1,0 +1,10 @@
+{
+  "name": "go-game-cloud-function",
+  "version": "1.0.0",
+  "description": "Cloud function for Go Game WeChat Mini Program",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest",
+    "axios": "^1.6.0"
+  }
+} 

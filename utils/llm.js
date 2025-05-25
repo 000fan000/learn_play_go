@@ -1,5 +1,7 @@
 // 从全局配置中获取API密钥
-const SIFLOW_API_KEY = getApp().globalData.siflowApiKey || '';
+// const SIFLOW_API_KEY = getApp().globalData.siflowApiKey || '';
+// env 
+
 const SILICONFLOW_API_URL = 'https://api.siliconflow.cn/v1/chat/completions';
 
 const MODELS = {
@@ -53,21 +55,41 @@ const systemPrompt = `# 角色：你是一位围棋AI助手，请根据当前盘
 // 测试函数：验证API连接
 async function testLLMConnection() {
   console.log('Testing LLM connection...');
-  console.log('API Key:', SIFLOW_API_KEY ? 'Present' : 'Missing');
-  console.log('API URL:', SILICONFLOW_API_URL);
-
-  if (!SIFLOW_API_KEY) {
-    console.error('API key is missing');
-    return false;
-  }
-
+  
   try {
-    const testPrompt = "Hello, this is a test message.";
-    const response = await generateAIResponse(testPrompt);
-    console.log('Test response:', response);
+    // 首先测试云函数是否可用
+    const testResult = await wx.cloud.callFunction({
+      name: 'llmProxy',
+      data: {
+        prompt: [{"role":"system","content":"You are a helpful assistant."}, { role: 'user', content: "Test connection" }],
+        model: MODELS.DEEPSEEK,
+        options: {
+          max_tokens: 50,
+          temperature: 0.7
+        }
+      }
+    });
+
+    console.log('Cloud function response:', testResult);
+
+    if (!testResult.result) {
+      console.error('Cloud function returned no result');
+      return false;
+    }
+
+    if (!testResult.result.success) {
+      console.error('Cloud function error:', testResult.result.error);
+      return false;
+    }
+
+    console.log('Test response:', testResult.result.data);
     return true;
   } catch (error) {
-    console.error('Test failed:', error);
+    console.error('Test failed with error:', error);
+    // 检查是否是云函数未部署的错误
+    if (error.errMsg && error.errMsg.includes('not found')) {
+      console.error('Cloud function not found. Please make sure it is deployed.');
+    }
     return false;
   }
 }
@@ -75,66 +97,28 @@ async function testLLMConnection() {
 async function generateAIResponse(prompt, model = MODELS.DEEPSEEK, options = {}) {
   const { temperature = 0.7, max_tokens = 512 } = options;
 
-  if (!SIFLOW_API_KEY) {
-    console.error('API key not configured');
-    throw new Error('API key not configured. Please set siflowApiKey in app.js globalData');
-  }
-
-  let apiUrl, requestBody, headers;
-
-  apiUrl = SILICONFLOW_API_URL;
-  headers = {
-    accept: 'application/json',
-    'content-type': 'application/json',
-    authorization: 'Bearer ' + SIFLOW_API_KEY
-  };
-  requestBody = {
-    model: model,
-    messages: [{"role":"system","content":systemPrompt},{ role: 'user', content: prompt }],
-    stream: false,
-    max_tokens,
-    temperature,
-    top_p: 0.7,
-    top_k: 50,
-    frequency_penalty: 0.5,
-    n: 1
-  };
-
-  console.log('Sending request to LLM:', {
-    url: apiUrl,
-    headers: { ...headers, authorization: 'Bearer ***' }, // Hide API key in logs
-    body: requestBody
-  });
-
   try {
-    const response = await new Promise((resolve, reject) => {
-      wx.request({
-        url: apiUrl,
-        method: 'POST',
-        header: headers,
-        data: requestBody,
-        success: (res) => {
-          console.log('LLM API response:', res);
-          resolve(res);
-        },
-        fail: (err) => {
-          console.error('LLM API request failed:', err);
-          reject(err);
+    const result = await wx.cloud.callFunction({
+      name: 'llmProxy', // 云函数名称
+      data: {
+        prompt: [{"role":"system","content":systemPrompt}, { role: 'user', content: prompt }],
+        model: model,
+        options: {
+          max_tokens,
+          temperature,
+          top_p: 0.7,
+          top_k: 50,
+          frequency_penalty: 0.5,
+          n: 1
         }
-      });
+      }
     });
 
-    if (response.statusCode !== 200) {
-      console.error("API error response:", response);
-      throw new Error(`API error: ${response.statusCode} ${response.errMsg}`);
+    if (!result.result.success) {
+      throw new Error(result.result.error || 'API request failed');
     }
 
-    if (!response.data || !response.data.choices || !response.data.choices[0] || !response.data.choices[0].message) {
-      console.error("Invalid API response format:", response.data);
-      throw new Error('Invalid API response format');
-    }
-
-    return response.data.choices[0].message.content;
+    return result.result.data.choices[0].message.content;
   } catch (error) {
     console.error('Error generating response:', error);
     throw error;
