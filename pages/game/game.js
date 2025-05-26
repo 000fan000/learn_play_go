@@ -28,7 +28,9 @@ Page({
     aiVariations: [], // AI备选方案
     winProbability: 0, // AI评估的胜率
     isLoading: false, // 添加加载状态
-    errorMessage: '' // 添加错误信息
+    errorMessage: '', // 添加错误信息
+    thinkingTime: 0, // AI思考时间
+    thinkingTimer: null // 计时器引用
   },
 
   onLoad: async function() {
@@ -90,6 +92,24 @@ Page({
     });
   },
 
+  // 开始计时
+  startThinkingTimer: function() {
+    this.setData({ thinkingTime: 0 });
+    this.data.thinkingTimer = setInterval(() => {
+      this.setData({
+        thinkingTime: this.data.thinkingTime + 1
+      });
+    }, 1000);
+  },
+
+  // 停止计时
+  stopThinkingTimer: function() {
+    if (this.data.thinkingTimer) {
+      clearInterval(this.data.thinkingTimer);
+      this.data.thinkingTimer = null;
+    }
+  },
+
   // 落子
   placeStone: async function(e) {
     if (this.data.gameStatus !== 'playing') return;
@@ -99,6 +119,7 @@ Page({
     if (this.data.board[row][col] !== 0) return;
 
     this.setData({ isLoading: true, errorMessage: '' });
+    this.startThinkingTimer(); // 开始计时
 
     try {
       // 创建新的棋盘状态
@@ -157,6 +178,7 @@ Page({
       console.error('Error in placeStone:', error);
       this.showError(error.message || 'AI响应出错，请重试');
     } finally {
+      this.stopThinkingTimer(); // 停止计时
       this.setData({ isLoading: false });
     }
   },
@@ -235,5 +257,10 @@ Page({
         captures: 0
       }
     });
+  },
+
+  // 页面卸载时清理计时器
+  onUnload: function() {
+    this.stopThinkingTimer();
   }
 }); 

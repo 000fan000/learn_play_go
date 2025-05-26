@@ -93,13 +93,12 @@
 .board-container {
   width: 100%;
   aspect-ratio: 1;
-  padding: 20rpx;
+  /* Reduce padding to make space smaller */
+  padding: 10rpx; 
   background-color: #fff;
   border-radius: 16rpx;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
   position: relative;
-  display: flex;
-  flex-direction: column;
 }
 
 .board-container.loading {
@@ -136,10 +135,22 @@
   100% { transform: rotate(360deg); }
 }
 
+.loading-text {
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.thinking-time {
+  font-size: 28rpx;
+  color: #666;
+  font-family: monospace;
+}
+
 .coordinate-numbers {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 40rpx;
   bottom: 0;
   width: 40rpx;
   display: flex;
@@ -153,7 +164,7 @@
   position: absolute;
   left: 40rpx;
   right: 0;
-  bottom: 0;
+  top: 0;
   height: 40rpx;
   display: flex;
   justify-content: space-between;
@@ -170,7 +181,7 @@
 .board {
   width: calc(100% - 40rpx);
   height: calc(100% - 40rpx);
-  margin: 20rpx 0 0 40rpx;
+  margin: 40rpx 0 0 40rpx;
   position: relative;
   background-color: #DEB887;
   border-radius: 8rpx;

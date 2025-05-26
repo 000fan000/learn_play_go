@@ -31,9 +31,9 @@
 
   <!-- 棋盘区域 -->
   <view class="board-container {{isLoading ? 'loading' : ''}}">
-    <!-- 左侧数字坐标 -->
-    <view class="coordinate-numbers">
-      <text wx:for="{{boardSize}}" wx:key="*this" class="coordinate-text">{{boardSize - index}}</text>
+    <!-- 顶部字母坐标 -->
+    <view class="coordinate-letters">
+      <text wx:for="{{boardSize}}" wx:key="*this" class="coordinate-text">{{String.fromCharCode(65 + index)}}</text>
     </view>
     
     <!-- 棋盘主体 -->
@@ -54,9 +54,16 @@
       </view>
     </view>
 
-    <!-- 底部字母坐标 -->
-    <view class="coordinate-letters">
-      <text wx:for="{{boardSize}}" wx:key="*this" class="coordinate-text">{{String.fromCharCode(65 + index)}}</text>
+    <!-- 左侧数字坐标 -->
+    <view class="coordinate-numbers">
+      <text wx:for="{{boardSize}}" wx:key="*this" class="coordinate-text">{{index + 1}}</text>
+    </view>
+
+    <!-- 加载遮罩 -->
+    <view class="loading-mask" wx:if="{{isLoading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">AI思考中...</text>
+      <text class="thinking-time">已用时: {{thinkingTime}}秒</text>
     </view>
   </view>
 
