@@ -89,15 +89,35 @@
 /* 棋盘区域样式 */
 .board-container {
   position: relative;
-  width: 100%;
-  max-width: 750rpx;
+  width: calc(100% - 80rpx); /* 减去左右padding的总和 */
+  max-width: 670rpx; /* 750rpx - 80rpx */
   aspect-ratio: 1;
-  margin: 20rpx 0;
-  background-color: #DEB887;
+  margin: 20rpx auto; /* 居中显示 */
+  background: linear-gradient(135deg, #E6C9A8 0%, #DEB887 100%);
   border-radius: 10rpx;
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
+  padding: 60rpx 40rpx 40rpx 60rpx; /* 上右下左的内边距 */
+}
+
+/* 根据棋盘大小调整内边距 */
+.board-container[data-size="9"] {
+  padding: 80rpx 60rpx 60rpx 80rpx;
+  width: calc(100% - 140rpx);
+  max-width: 610rpx;
+}
+
+.board-container[data-size="13"] {
+  padding: 70rpx 50rpx 50rpx 70rpx;
+  width: calc(100% - 120rpx);
+  max-width: 630rpx;
+}
+
+.board-container[data-size="19"] {
+  padding: 60rpx 40rpx 40rpx 60rpx;
+  width: calc(100% - 100rpx);
+  max-width: 650rpx;
 }
 
 .board-container.loading {
@@ -146,32 +166,50 @@
 }
 
 .coordinate-letters {
-  display: flex;
-  justify-content: space-around;
-  padding: 10rpx 0;
+  position: absolute;
+  top: 0;
+  left: 60rpx;
+  right: 40rpx;
   height: 40rpx;
+  display: flex;
+  justify-content: space-between;
+  padding: 10rpx 0;
+  z-index: 2;
+  pointer-events: none; /* 防止坐标影响点击事件 */
 }
 
 .coordinate-numbers {
   position: absolute;
-  left: -40rpx;
-  top: 0;
-  height: 100%;
+  left: 10rpx; /* 调整左侧位置，确保在屏幕内 */
+  top: 60rpx;
+  bottom: 40rpx;
+  width: 40rpx;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding: 0 10rpx;
+  z-index: 2;
+  pointer-events: none; /* 防止坐标影响点击事件 */
 }
 
 .coordinate-text {
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #333;
   font-weight: bold;
+  text-shadow: 0 1rpx 2rpx rgba(255, 255, 255, 0.8);
+  min-width: 28rpx;
+  text-align: center;
+  opacity: 0.9; /* 稍微降低不透明度，使其不那么突兀 */
 }
 
 .board {
   flex: 1;
   position: relative;
-  padding: 20rpx;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 8rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .board-grid {
@@ -179,11 +217,24 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.board-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 50%);
+  pointer-events: none;
 }
 
 .board-row {
   flex: 1;
   display: flex;
+  position: relative;
 }
 
 .board-cell {
@@ -192,11 +243,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  aspect-ratio: 1; /* 确保每个格子都是正方形 */
 }
 
 .grid-line {
   position: absolute;
-  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .grid-line.horizontal {
@@ -212,21 +264,26 @@
 }
 
 .stone {
-  width: 80%;
-  height: 80%;
+  width: 85%;
+  height: 85%;
   border-radius: 50%;
   position: absolute;
   z-index: 1;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
 }
 
 .stone.black {
   background: radial-gradient(circle at 30% 30%, #666, #000);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3),
+              inset 2rpx 2rpx 4rpx rgba(255, 255, 255, 0.2);
 }
 
 .stone.white {
   background: radial-gradient(circle at 30% 30%, #fff, #ddd);
   border: 2rpx solid #ccc;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2),
+              inset 2rpx 2rpx 4rpx rgba(255, 255, 255, 0.8);
 }
 
 /* AI分析区域样式 */
@@ -380,22 +437,37 @@
 
 /* 响应式调整 */
 @media screen and (max-width: 375px) {
-  .stone {
-    width: 85%;
-    height: 85%;
+  .board-container {
+    width: calc(100% - 60rpx);
+    padding: 50rpx 30rpx 30rpx 50rpx;
+  }
+  
+  .board-container[data-size="9"] {
+    width: calc(100% - 110rpx);
+    padding: 65rpx 45rpx 45rpx 65rpx;
+  }
+  
+  .board-container[data-size="13"] {
+    width: calc(100% - 90rpx);
+    padding: 55rpx 35rpx 35rpx 55rpx;
+  }
+  
+  .board-container[data-size="19"] {
+    width: calc(100% - 80rpx);
+    padding: 50rpx 30rpx 30rpx 50rpx;
   }
   
   .coordinate-text {
-    font-size: 20rpx;
-  }
-  
-  .difficulty-btn {
-    min-width: 100rpx;
-    font-size: 22rpx;
-  }
-  
-  .action-btn {
     font-size: 24rpx;
-    padding: 12rpx 24rpx;
+    min-width: 24rpx;
+  }
+  
+  .coordinate-numbers {
+    left: 5rpx;
+  }
+  
+  .stone {
+    width: 80%;
+    height: 80%;
   }
 } 
