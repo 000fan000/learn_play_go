@@ -1,10 +1,10 @@
 .container {
   padding: 20rpx;
-  background-color: #f5f5f5;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #f5f5f5;
+  min-height: 100vh;
 }
 
 /* 游戏信息区域样式 */
@@ -15,22 +15,21 @@
   align-items: center;
   padding: 20rpx;
   background-color: #fff;
-  border-radius: 16rpx;
+  border-radius: 10rpx;
   margin-bottom: 20rpx;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
 }
 
 .player-info, .ai-info {
   flex: 1;
-  text-align: center;
-  padding: 16rpx;
-  border-radius: 12rpx;
+  padding: 10rpx;
+  border-radius: 8rpx;
   transition: all 0.3s ease;
 }
 
 .player-info.active, .ai-info.active {
-  background-color: rgba(0, 122, 255, 0.1);
-  box-shadow: 0 0 0 2rpx #007AFF;
+  background-color: #f0f0f0;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }
 
 .player-name, .ai-name {
@@ -70,35 +69,35 @@
 }
 
 .vs {
-  font-size: 36rpx;
+  font-size: 32rpx;
   font-weight: bold;
-  color: #333;
+  color: #666;
   margin: 0 20rpx;
 }
 
 /* 错误信息样式 */
 .error-message {
   width: 100%;
-  padding: 16rpx;
+  padding: 20rpx;
+  background-color: #ffebee;
+  color: #c62828;
+  border-radius: 8rpx;
   margin-bottom: 20rpx;
-  background-color: #fff2f0;
-  border: 2rpx solid #ffccc7;
-  border-radius: 16rpx;
-  color: #ff4d4f;
-  font-size: 28rpx;
   text-align: center;
 }
 
 /* 棋盘区域样式 */
 .board-container {
-  width: 100%;
-  aspect-ratio: 1;
-  /* Reduce padding to make space smaller */
-  padding: 10rpx; 
-  background-color: #fff;
-  border-radius: 16rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
   position: relative;
+  width: 100%;
+  max-width: 750rpx;
+  aspect-ratio: 1;
+  margin: 20rpx 0;
+  background-color: #DEB887;
+  border-radius: 10rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
 }
 
 .board-container.loading {
@@ -112,22 +111,21 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 2;
 }
 
 .loading-spinner {
-  width: 60rpx;
-  height: 60rpx;
+  width: 80rpx;
+  height: 80rpx;
   border: 6rpx solid #f3f3f3;
-  border-top: 6rpx solid #007AFF;
+  border-top: 6rpx solid #3498db;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 20rpx;
 }
 
 @keyframes spin {
@@ -136,56 +134,44 @@
 }
 
 .loading-text {
-  font-size: 32rpx;
+  margin-top: 20rpx;
+  font-size: 28rpx;
   color: #333;
-  margin-bottom: 12rpx;
 }
 
 .thinking-time {
-  font-size: 28rpx;
+  margin-top: 10rpx;
+  font-size: 24rpx;
   color: #666;
-  font-family: monospace;
+}
+
+.coordinate-letters {
+  display: flex;
+  justify-content: space-around;
+  padding: 10rpx 0;
+  height: 40rpx;
 }
 
 .coordinate-numbers {
   position: absolute;
-  left: 0;
-  top: 40rpx;
-  bottom: 0;
-  width: 40rpx;
+  left: -40rpx;
+  top: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 20rpx 0;
-  z-index: 2;
-}
-
-.coordinate-letters {
-  position: absolute;
-  left: 40rpx;
-  right: 0;
-  top: 0;
-  height: 40rpx;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 20rpx;
-  z-index: 2;
+  justify-content: space-around;
 }
 
 .coordinate-text {
   font-size: 24rpx;
-  color: #666;
+  color: #333;
   font-weight: bold;
 }
 
 .board {
-  width: calc(100% - 40rpx);
-  height: calc(100% - 40rpx);
-  margin: 40rpx 0 0 40rpx;
+  flex: 1;
   position: relative;
-  background-color: #DEB887;
-  border-radius: 8rpx;
-  overflow: hidden;
+  padding: 20rpx;
 }
 
 .board-grid {
@@ -198,7 +184,6 @@
 .board-row {
   flex: 1;
   display: flex;
-  position: relative;
 }
 
 .board-cell {
@@ -218,49 +203,46 @@
   width: 100%;
   height: 2rpx;
   top: 50%;
-  left: 0;
 }
 
 .grid-line.vertical {
-  width: 2rpx;
   height: 100%;
+  width: 2rpx;
   left: 50%;
-  top: 0;
 }
 
 .stone {
   width: 80%;
   height: 80%;
   border-radius: 50%;
-  z-index: 1;
   position: absolute;
+  z-index: 1;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
 }
 
 .stone.black {
-  background-color: #000;
-  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+  background: radial-gradient(circle at 30% 30%, #666, #000);
 }
 
 .stone.white {
-  background-color: #fff;
-  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+  background: radial-gradient(circle at 30% 30%, #fff, #ddd);
+  border: 2rpx solid #ccc;
 }
 
 /* AI分析区域样式 */
 .ai-analysis {
   width: 100%;
-  margin: 20rpx 0;
   padding: 20rpx;
   background-color: #fff;
-  border-radius: 16rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  border-radius: 8rpx;
+  margin-bottom: 20rpx;
 }
 
 .analysis-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16rpx;
+  margin-bottom: 10rpx;
 }
 
 .analysis-title {
@@ -271,37 +253,34 @@
 
 .win-probability {
   font-size: 28rpx;
-  color: #007AFF;
-  font-weight: bold;
+  color: #2196f3;
 }
 
 .analysis-content {
   font-size: 28rpx;
   color: #666;
-  line-height: 1.6;
-  margin-bottom: 16rpx;
+  line-height: 1.5;
+  margin-bottom: 20rpx;
 }
 
 .variations {
-  margin-top: 16rpx;
-  padding-top: 16rpx;
-  border-top: 2rpx solid #eee;
+  margin-top: 20rpx;
 }
 
 .variations-title {
   font-size: 28rpx;
-  color: #333;
   font-weight: bold;
-  margin-bottom: 12rpx;
-  display: block;
+  color: #333;
+  margin-bottom: 10rpx;
 }
 
 .variation-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 8rpx 0;
-  font-size: 26rpx;
+  padding: 10rpx;
+  background-color: #f5f5f5;
+  border-radius: 6rpx;
+  margin-bottom: 10rpx;
 }
 
 .variation-item .move {
@@ -316,11 +295,9 @@
 /* 控制按钮区域样式 */
 .controls {
   width: 100%;
-  margin-top: 20rpx;
   padding: 20rpx;
   background-color: #fff;
-  border-radius: 16rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  border-radius: 8rpx;
 }
 
 .difficulty-selector {
@@ -329,21 +306,24 @@
 
 .difficulty-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 10rpx;
   margin-top: 10rpx;
 }
 
 .difficulty-btn {
   flex: 1;
+  min-width: 120rpx;
   font-size: 24rpx;
-  padding: 10rpx;
-  background-color: #f0f0f0;
+  padding: 10rpx 20rpx;
+  background-color: #f5f5f5;
   border: none;
-  border-radius: 8rpx;
+  border-radius: 6rpx;
+  color: #333;
 }
 
 .difficulty-btn.active {
-  background-color: #007AFF;
+  background-color: #2196f3;
   color: #fff;
 }
 
@@ -360,15 +340,15 @@
 .action-btn {
   flex: 1;
   font-size: 28rpx;
-  padding: 16rpx;
-  background-color: #007AFF;
-  color: #fff;
+  padding: 15rpx 30rpx;
+  background-color: #f5f5f5;
   border: none;
-  border-radius: 8rpx;
+  border-radius: 6rpx;
+  color: #333;
 }
 
 .action-btn:active {
-  opacity: 0.8;
+  background-color: #e0e0e0;
 }
 
 .action-btn[disabled] {
@@ -379,15 +359,11 @@
 /* 最后一步坐标显示 */
 .last-move {
   width: 100%;
-  padding: 16rpx;
-  margin: 20rpx 0;
+  padding: 20rpx;
   background-color: #fff;
-  border-radius: 16rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12rpx;
+  border-radius: 8rpx;
+  margin-bottom: 20rpx;
+  text-align: center;
 }
 
 .last-move-label {
@@ -400,4 +376,26 @@
   color: #007AFF;
   font-weight: bold;
   font-family: monospace;
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 375px) {
+  .stone {
+    width: 85%;
+    height: 85%;
+  }
+  
+  .coordinate-text {
+    font-size: 20rpx;
+  }
+  
+  .difficulty-btn {
+    min-width: 100rpx;
+    font-size: 22rpx;
+  }
+  
+  .action-btn {
+    font-size: 24rpx;
+    padding: 12rpx 24rpx;
+  }
 } 

@@ -10,23 +10,32 @@ const MODELS = {
 
 const systemPrompt = `# 角色：你是一位围棋AI助手，请根据当前盘面状态分析并返回最佳落子位置
 
+## 棋盘坐标系统
+- 棋盘坐标从左到右是A到Z，从下到上是1到N（N为棋盘大小）
+- 例如在9x9棋盘上：A1在左下角，I9在右上角
+- 在13x13棋盘上：A1在左下角，M13在右上角
+- 在19x19棋盘上：A1在左下角，T19在右上角
+
 ## 重要说明
 - 你必须返回一个有效的JSON对象，不要包含任何其他文本或markdown标记
 - 不要使用代码块标记（\`\`\`）
 - 确保所有数值都是数字类型，不要使用字符串
 - 确保JSON格式完全正确，包括引号、逗号等
+- 根据棋盘大小自动调整坐标范围
 
 ## 输入格式
 {
   "game_state": {
-    "board": [[0,1,-1,...], ...], # 19x19矩阵，0表示空，1表示黑子，-1表示白子
+    "board": [[0,1,-1,...], ...], # NxN矩阵，0表示空，1表示黑子，-1表示白子
     "history": ["Q16", "D4"],     # 落子顺序
     "komi": 7.5,                 # 贴目
-    "rules": "chinese"           # 规则体系
+    "rules": "chinese",          # 规则体系
+    "board_size": 19            # 棋盘大小（9/13/19）
   },
   "ai_config": {
-    "level": "pro",              # 难度等级
-    "time_limit": 10             # 思考时间(秒)
+    "level": "beginner",        # 难度等级：beginner/intermediate/advanced/professional
+    "time_limit": 10,          # 思考时间(秒)
+    "handicap": 0              # 让子数（0-4）
   }
 }
 
@@ -128,8 +137,14 @@ async function generateAIResponse(prompt, model = MODELS.DEEPSEEK, options = {})
 // 处理游戏状态并获取AI响应
 async function getAIResponse(gameState, aiConfig) {
   const requestData = {
-    game_state: gameState,
-    ai_config: aiConfig
+    game_state: {
+      ...gameState,
+      board_size: gameState.board.length // 添加棋盘大小信息
+    },
+    ai_config: {
+      ...aiConfig,
+      handicap: aiConfig.handicap || 0 // 使用传入的handicap值，如果没有则默认为0
+    }
   };
   
   try {

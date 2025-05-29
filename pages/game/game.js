@@ -1,8 +1,16 @@
 const { getAIResponse, testLLMConnection } = require('../../utils/llm');
 
+// 难度配置
+const DIFFICULTY_CONFIG = {
+  'beginner': { size: 9, handicap: 0 },
+  'intermediate': { size: 13, handicap: 0 },
+  'advanced': { size: 19, handicap: 0 },
+  'professional': { size: 19, handicap: 0 }
+};
+
 Page({
   data: {
-    boardSize: 19, // 19x19 标准围棋棋盘
+    boardSize: 19, // 默认棋盘大小
     board: [], // 棋盘状态，0表示空，1表示黑子，-1表示白子
     currentPlayer: 'black', // 当前玩家颜色
     gameStatus: 'playing', // 游戏状态：playing, ended
@@ -30,7 +38,8 @@ Page({
     isLoading: false, // 添加加载状态
     errorMessage: '', // 添加错误信息
     thinkingTime: 0, // AI思考时间
-    thinkingTimer: null // 计时器引用
+    thinkingTimer: null, // 计时器引用
+    handicapStones: [] // 让子位置
   },
 
   onLoad: async function() {
@@ -53,30 +62,64 @@ Page({
 
   // 初始化棋盘
   initBoard: function() {
-    const board = Array(this.data.boardSize).fill().map(() => 
-      Array(this.data.boardSize).fill(0)
+    const config = DIFFICULTY_CONFIG[this.data.aiLevel];
+    const board = Array(config.size).fill().map(() => 
+      Array(config.size).fill(0)
     );
+    
+    // 放置让子
+    const handicapStones = this.getHandicapStones(config.size, config.handicap);
+    handicapStones.forEach(({row, col}) => {
+      board[row][col] = 1; // 黑子（玩家）
+    });
+
     this.setData({ 
+      boardSize: config.size,
       board,
       moveHistory: [],
       aiAnalysis: '',
       aiVariations: [],
       winProbability: 0,
-      errorMessage: ''
+      errorMessage: '',
+      handicapStones
     });
+  },
+
+  // 获取让子位置
+  getHandicapStones: function(size, handicap) {
+    const stones = [];
+    if (handicap === 0) return stones;
+
+    // 标准让子位置
+    const positions = [
+      {row: 2, col: 2},
+      {row: 2, col: size - 3},
+      {row: size - 3, col: 2},
+      {row: size - 3, col: size - 3},
+      {row: Math.floor(size/2), col: Math.floor(size/2)}
+    ];
+
+    // 根据让子数量选择位置
+    for (let i = 0; i < handicap; i++) {
+      if (i < positions.length) {
+        stones.push(positions[i]);
+      }
+    }
+
+    return stones;
   },
 
   // 坐标转换：棋盘坐标 -> 数组索引
   coordToIndex: function(coord) {
     const col = coord.charCodeAt(0) - 'A'.charCodeAt(0);
-    const row = parseInt(coord.slice(1)) - 1;
+    const row = this.data.boardSize - parseInt(coord.slice(1));
     return { row, col };
   },
 
   // 坐标转换：数组索引 -> 棋盘坐标
   indexToCoord: function(row, col) {
     const colChar = String.fromCharCode('A'.charCodeAt(0) + col);
-    return `${colChar}${row + 1}`;
+    return `${colChar}${this.data.boardSize - row}`;
   },
 
   // 显示错误信息
@@ -146,7 +189,8 @@ Page({
 
       const aiConfig = {
         level: this.data.aiLevel,
-        time_limit: 30
+        time_limit: 30,
+        handicap: DIFFICULTY_CONFIG[this.data.aiLevel].handicap
       };
 
       console.log('Requesting AI response for game state:', gameState);
