@@ -1,5 +1,5 @@
 {
-  "compileType": "game",
+  "compileType": "miniprogram",
   "libVersion": "3.8.5",
   "packOptions": {
     "ignore": [],
@@ -46,7 +46,7 @@
     "tabIndent": "auto",
     "tabSize": 2
   },
-  "appid": "wx07e558c40106c3ac",
+  "appid": "wxc2f43cbb0ab4ae48",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
   "cloudfunctionRoot": "backend/",
   "projectname": "learn_play_go"

@@ -25,7 +25,7 @@ exports.main = async (event, context) => {
 
     // 构建请求体
     const requestBody = {
-      model: model || 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
+      model: model || 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
       messages: prompt,
       ...options
     }
