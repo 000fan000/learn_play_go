@@ -89,36 +89,17 @@
 /* 棋盘区域样式 */
 .board-container {
   position: relative;
-  width: calc(100% - 80rpx);
-  max-width: 670rpx;
-  aspect-ratio: 1;
+  width: 600rpx;  /* Fixed width */
+  height: 600rpx; /* Fixed height */
   margin: 20rpx auto;
   background: linear-gradient(135deg, #E6C9A8 0%, #DEB887 100%);
   border-radius: 10rpx;
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  padding: 40rpx 20rpx 20rpx 40rpx;
+  padding: 40rpx;
 }
 
-/* 根据棋盘大小调整内边距 */
-.board-container[data-size="9"] {
-  padding: 80rpx 60rpx 60rpx 80rpx;
-  width: calc(100% - 140rpx);
-  max-width: 610rpx;
-}
-
-.board-container[data-size="13"] {
-  padding: 70rpx 50rpx 50rpx 70rpx;
-  width: calc(100% - 120rpx);
-  max-width: 630rpx;
-}
-
-.board-container[data-size="19"] {
-  padding: 60rpx 40rpx 40rpx 60rpx;
-  width: calc(100% - 100rpx);
-  max-width: 650rpx;
-}
 
 .board-container.loading {
   opacity: 0.7;
@@ -167,34 +148,34 @@
 
 .coordinate-letters {
   position: absolute;
-  top: 20rpx;
-  left: 40rpx;
-  right: 40rpx;
+  top: 0;
+  left: 60rpx;  /* Match board padding */
+  right: 40rpx; /* Match board padding */
   height: 40rpx;
   display: flex;
-  justify-content: space-evenly;
-  padding: 6rpx 0;
+  justify-content: space-between;
+  padding: 0;
   z-index: 10;
   pointer-events: none;
 }
 
 .coordinate-numbers {
   position: absolute;
-  left: 40rpx;
-  top: 40rpx;
-  bottom: 40rpx;
-  width: 30rpx;
+  left: 0;
+  top: 60rpx;  /* Match board padding */
+  bottom: 40rpx; /* Match board padding */
+  width: 40rpx;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  padding: 0 6rpx;
+  justify-content: space-between;
+  padding: 0;
   z-index: 10;
   pointer-events: none;
 }
 
 .coordinate-text {
   font-size: 24rpx;
-  color: #333;
+  color: #666666;
   font-weight: bold;
   text-shadow: 0 1rpx 2rpx rgba(255, 255, 255, 0.8);
   min-width: 24rpx;
@@ -202,7 +183,43 @@
   opacity: 1;
   line-height: 1;
   display: block;
-  flex: 1;
+}
+
+/* Update coordinate positioning for different board sizes */
+.board-container[data-size="9"] .coordinate-letters {
+  top: 10rpx;
+  left: 64rpx;
+  right: 60rpx;
+}
+
+.board-container[data-size="13"] .coordinate-letters {
+  top: 10rpx;
+  left: 52rpx;
+  right: 50rpx;
+}
+
+.board-container[data-size="19"] .coordinate-letters {
+  top: 10rpx;
+  left: 45rpx;
+  right: 42rpx;
+}
+
+.board-container[data-size="9"] .coordinate-numbers {
+  left: 0;
+  top: 64rpx;
+  bottom: 60rpx;
+}
+
+.board-container[data-size="13"] .coordinate-numbers {
+  left: 0;
+  top: 52rpx;
+  bottom: 50rpx;
+}
+
+.board-container[data-size="19"] .coordinate-numbers {
+  left: 0;
+  top: 45rpx;
+  bottom: 42rpx;
 }
 
 .board {
@@ -210,18 +227,15 @@
   height: 100%;
   flex: 1;
   position: relative;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
-  border-radius: 8rpx;
-  overflow: hidden;
+  background-color: #DEB887;
+  border: 2rpx solid #000;
   display: flex;
   flex-direction: column;
-  background-color: #DEB887;
-  border: 2rpx solid #000; /* Add border around the entire board */
 }
 
 .board-grid {
-  width: calc(100% - 2rpx); /* Account for border width */
-  height: calc(100% - 2rpx); /* Account for border width */
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -234,12 +248,11 @@
 
 .board-cell {
   flex: 1;
-  min-width: 0; /* Prevent flex items from growing */
-  min-height: 0; /* Prevent flex items from growing */
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  aspect-ratio: 1;
 }
 
 .board-row:first-child .grid-line.horizontal {
@@ -248,15 +261,6 @@
 
 .board-row:last-child .grid-line.horizontal {
   bottom: 0;
-}
-
-.board-cell {
-  flex: 1;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  aspect-ratio: 1;
 }
 
 .board-cell:first-child .grid-line.vertical {
@@ -283,24 +287,6 @@
   height: 100%;
   width: 1px;
   left: 0;
-}
-
-/* Update coordinate positioning for different board sizes */
-.board-container[data-size="9"] .coordinate-letters,
-.board-container[data-size="13"] .coordinate-letters,
-.board-container[data-size="19"] .coordinate-letters {
-  left: 40rpx;
-  right: 20rpx;
-  height: 40rpx;
-}
-
-.board-container[data-size="9"] .coordinate-numbers,
-.board-container[data-size="13"] .coordinate-numbers,
-.board-container[data-size="19"] .coordinate-numbers {
-  left: 0;
-  top: 40rpx;
-  bottom: 20rpx;
-  width: 40rpx;
 }
 
 /* Adjust coordinate text size based on board size */
