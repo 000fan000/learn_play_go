@@ -39,7 +39,13 @@ Page({
     errorMessage: '', // 添加错误信息
     thinkingTime: 0, // AI思考时间
     thinkingTimer: null, // 计时器引用
-    handicapStones: [] // 让子位置
+    handicapStones: [], // 让子位置
+    coordinateLetters: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T']
+  }, 
+
+
+  onLoad: function() {
+    console.log('boardSize:', this.data.boardSize); // Check if this logs the correct value
   },
 
   onLoad: async function() {
@@ -73,6 +79,10 @@ Page({
       board[row][col] = 1; // 黑子（玩家）
     });
 
+    // Update coordinate letters based on board size
+    const coordinateLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'].slice(0, config.size);
+    console.log('New coordinate letters:', coordinateLetters, 'for size:', config.size);
+
     this.setData({ 
       boardSize: config.size,
       board,
@@ -81,7 +91,8 @@ Page({
       aiVariations: [],
       winProbability: 0,
       errorMessage: '',
-      handicapStones
+      handicapStones,
+      coordinateLetters
     });
   },
 
@@ -276,10 +287,14 @@ Page({
     if (this.data.isLoading) return;
     
     const level = e.currentTarget.dataset.level;
+    console.log('Changing difficulty to:', level); // Add debug log
+    
     this.setData({
       aiLevel: level
+    }, () => {
+      console.log('After setData - boardSize:', this.data.boardSize); // Add debug log
+      this.restartGame();
     });
-    this.restartGame();
   },
 
   // 重新开始游戏
@@ -308,3 +323,4 @@ Page({
     this.stopThinkingTimer();
   }
 }); 
+

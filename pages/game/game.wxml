@@ -33,7 +33,11 @@
   <view class="board-container {{isLoading ? 'loading' : ''}}" data-size="{{boardSize}}">
     <!-- 顶部字母坐标 -->
     <view class="coordinate-letters">
-      <text wx:for="{{boardSize}}" wx:key="*this" class="coordinate-text">{{String.fromCharCode(65 + index)}}</text>
+      <text 
+        wx:for="{{coordinateLetters}}" 
+        wx:key="*this" 
+        class="coordinate-text"
+      >{{item}}</text>
     </view>
     
     <!-- 棋盘主体 -->
