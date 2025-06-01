@@ -32,7 +32,7 @@ exports.main = async (event, context) => {
 
     // 设置axios超时时间
     const axiosInstance = axios.create({
-      timeout: 10000, // 2秒超时
+      timeout: 15000, // 15秒超时
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'

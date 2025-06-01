@@ -5,7 +5,7 @@
 const SILICONFLOW_API_URL = 'https://api.siliconflow.cn/v1/chat/completions';
 
 const MODELS = {
-  DEEPSEEK: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
+  DEEPSEEK: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
 };
 
 const systemPrompt = `# 角色：你是一位围棋AI助手，请根据当前盘面状态分析并返回最佳落子位置
